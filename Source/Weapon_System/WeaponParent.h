@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Components/SkeletalMeshComponent.h"
+
 #include "WeaponParent.generated.h"
 
 UCLASS()
@@ -15,12 +18,44 @@ public:
 	// Sets default values for this actor's properties
 	AWeaponParent();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+		bool SetupWeapon();
+
+	UFUNCTION(BlueprintCallable)
+		bool FireBullet();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	// Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* Body;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* Magazine;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USceneComponent* Barrel;
+
+	// Properties
+	// Weapon Data
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		FName ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		int CurrentMagazine;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		int ReserveAmmo;
+
+	// Player Data
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		APlayerCharacter* Player
+
 
 };
