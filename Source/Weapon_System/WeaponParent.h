@@ -55,7 +55,5 @@ public:
 
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		APlayerCharacter* Player
-
-
+		class APlayerCharacter* Player = nullptr;
 };
