@@ -45,6 +45,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Add Axis Binds
+	PlayerInputComponent->BindAxis("MoveX", this, &APlayerCharacter::MoveX);
+	PlayerInputComponent->BindAxis("MoveY", this, &APlayerCharacter::MoveY);
+	PlayerInputComponent->BindAxis("RotateX", this, &APlayerCharacter::RotateX);
+	PlayerInputComponent->BindAxis("RotateY", this, &APlayerCharacter::RotateY);
+
 }
 
 bool APlayerCharacter::SetNeweapon(FName ID)
@@ -65,5 +71,53 @@ bool APlayerCharacter::SetNeweapon(FName ID)
 	nw->SetupWeapon(ID, foundWeapon->BaseStats, foundWeapon->BaseVisual);
 
 	return false;
+}
+
+void APlayerCharacter::MoveX(float AxisValue)
+{
+	if (AxisValue != 0.0f)
+	{
+		if (a == false)
+		{
+			// Move on the X axis based on the input's axis value
+			AddMovementInput(GetActorForwardVector(), AxisValue, false);
+		}
+	}
+}
+
+void APlayerCharacter::MoveY(float AxisValue)
+{
+	if (AxisValue != 0.0f)
+	{
+		if (a == false)
+		{
+			// Move on the Y axis based on the input's axis value
+			AddMovementInput(GetActorRightVector(), AxisValue, false);
+		}
+	}
+}
+
+void APlayerCharacter::RotateX(float AxisValue)
+{
+	if (AxisValue != 0.0f)
+	{
+		if (a == false)
+		{
+			// Rotate on the X axis based on the input's axis value
+			AddControllerYawInput(AxisValue);
+		}
+	}
+}
+
+void APlayerCharacter::RotateY(float AxisValue)
+{
+	if (AxisValue != 0.0f)
+	{
+		if (a == false)
+		{
+			// Rotate on the Y axis based on the input's axis value
+			AddControllerPitchInput(AxisValue);
+		}
+	}
 }
 

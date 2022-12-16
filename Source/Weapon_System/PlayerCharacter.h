@@ -36,6 +36,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Player Movement
+	void MoveX(float AxisValue);
+	void MoveY(float AxisValue);
+	void RotateX(float AxisValue);
+	void RotateY(float AxisValue);
+
 public:	
 	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -57,4 +63,6 @@ public:
 	// Weapons
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		TArray <AWeaponParent*> CurrentWeapons;
+
+	bool a = false;
 };
