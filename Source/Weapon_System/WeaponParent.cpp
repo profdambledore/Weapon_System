@@ -29,10 +29,17 @@ void AWeaponParent::Tick(float DeltaTime)
 
 }
 
-bool AWeaponParent::SetupWeapon()
+bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisual NewVisual)
 {
+	// Set the stats and magazine
+	Stats = NewStats;
+	CurrentMagazine = Stats.Magazine;
 
-	return false;
+	// Set the visuals of the weapon
+	Body->SetSkeletalMesh(NewVisual.BodyMesh);
+	Magazine->SetSkeletalMesh(NewVisual.MagazineMesh);
+
+	return true;
 }
 
 bool AWeaponParent::FireBullet()

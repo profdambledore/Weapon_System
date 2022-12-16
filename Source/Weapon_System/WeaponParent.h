@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "Components/SkeletalMeshComponent.h"
+#include "WeaponStatLibrary.h"
 
 #include "WeaponParent.generated.h"
 
@@ -22,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)
-		bool SetupWeapon();
+		bool SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisual NewVisual);
 
 	UFUNCTION(BlueprintCallable)
 		bool FireBullet();
@@ -46,6 +47,9 @@ public:
 	// Weapon Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
 		FName ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		FWeaponStats Stats;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
 		int CurrentMagazine;

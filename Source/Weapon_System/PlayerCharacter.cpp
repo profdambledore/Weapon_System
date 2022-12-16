@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "WeaponParent.h"
 
 #include "PlayerCharacter.h"
 
@@ -16,6 +17,13 @@ APlayerCharacter::APlayerCharacter()
 
 	// Setup Weapon ChildActorComponent
 	KineticWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon Component"));
+
+	// Find and store a pointer to the weapon data table
+	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT(""));
+	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
+
+	CurrentWeapons.SetNum(3);
+
 }
 
 // Called when the game starts or when spawned
@@ -37,5 +45,25 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool APlayerCharacter::SetNeweapon(FName ID)
+{
+	// Find the weapons info
+	FWeaponInfo* foundWeapon = WeaponDataTable->FindRow<FWeaponInfo>(ID, "", false);
+	if (foundWeapon == nullptr) { return false; }
+
+	// Set the child actor class and cast to the new class
+	KineticWeaponActor->SetChildActorClass(foundWeapon->BaseStats.Frame.Class);
+	AWeaponParent* nw = Cast<AWeaponParent>(KineticWeaponActor->GetChildActor());
+	nw->Player = this;
+
+	// Store the weapon at the correct index in the weapon array
+	CurrentWeapons.Insert(nw, 0);
+
+	// Finally, setup the weapon
+	nw->SetupWeapon(ID, foundWeapon->BaseStats, foundWeapon->BaseVisual);
+
+	return false;
 }
 

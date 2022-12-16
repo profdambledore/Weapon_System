@@ -9,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/ChildActorComponent.h"
 
+#include "WeaponStatLibrary.h"
+
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -25,6 +27,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable)
+		bool SetNeweapon(FName ID);
 
 
 protected:
@@ -44,4 +49,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UChildActorComponent* KineticWeaponActor;
+
+	// Weapon Data Table
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		UDataTable* WeaponDataTable = nullptr;
+
+	// Weapons
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		TArray <AWeaponParent*> CurrentWeapons;
 };
