@@ -19,7 +19,7 @@ APlayerCharacter::APlayerCharacter()
 	KineticWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon Component"));
 
 	// Find and store a pointer to the weapon data table
-	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT(""));
+	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/WeaponTable.WeaponTable"));
 	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
 
 	CurrentWeapons.SetNum(3);
@@ -50,6 +50,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("MoveY", this, &APlayerCharacter::MoveY);
 	PlayerInputComponent->BindAxis("RotateX", this, &APlayerCharacter::RotateX);
 	PlayerInputComponent->BindAxis("RotateY", this, &APlayerCharacter::RotateY);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &APlayerCharacter::Reload);
+	PlayerInputComponent->BindAction("AimDownSight", IE_Pressed, this, &APlayerCharacter::ADS);
+	PlayerInputComponent->BindAction("AimDownSight", IE_Released, this, &APlayerCharacter::ADS);
 
 }
 
@@ -121,3 +125,54 @@ void APlayerCharacter::RotateY(float AxisValue)
 	}
 }
 
+void APlayerCharacter::Reload()
+{
+}
+
+void APlayerCharacter::ADS()
+{
+}
+
+void APlayerCharacter::FireCurrentWeapon()
+{
+}
+
+// Swapping Functions
+void APlayerCharacter::SwapNext()
+{
+	if ((CurrentWeaponIndex + 1) >= 3) {
+		NewWeaponIndex = 0;
+		StowCurrentWeapon();
+	}
+	else {
+		NewWeaponIndex = CurrentWeaponIndex + 1;
+		StowCurrentWeapon();
+	}
+}
+
+void APlayerCharacter::SwapPrev()
+{
+	if ((CurrentWeaponIndex - 1) <= -1) {
+		NewWeaponIndex = 2;
+		StowCurrentWeapon();
+	}
+	else {
+		NewWeaponIndex = CurrentWeaponIndex - 1;
+		StowCurrentWeapon();
+	}
+}
+
+void APlayerCharacter::SwapTo(int Index)
+{
+	if (Index != CurrentWeaponIndex) { NewWeaponIndex = Index; };	
+}
+
+void APlayerCharacter::SwapToWeapon(int Index)
+{
+	FAttachmentTransformRules attachRulesA(EAttachmentRule::SnapToTarget, false);
+	CurrentWeapons[CurrentWeaponIndex]->AttachToComponent(GetMesh(), attachRulesA, "");
+
+	FAttachmentTransformRules attachRulesB(EAttachmentRule::KeepRelative, false);
+	CurrentWeapons[Index]->AttachToComponent(GetMesh(), attachRulesB, "");
+	CurrentWeaponIndex = Index;
+}

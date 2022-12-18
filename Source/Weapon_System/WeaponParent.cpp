@@ -66,3 +66,39 @@ bool AWeaponParent::FireBullet()
 	return false;
 }
 
+bool AWeaponParent::GetCanReload()
+{
+	if (ReserveAmmo == -1 || ReserveAmmo >= 1) { return true; };
+
+	return false;
+}
+
+void AWeaponParent::RefilMagazine()
+{
+	if (ReserveAmmo == -1) {
+		CurrentMagazine = Stats.Magazine;
+	}
+	else if (Stats.Magazine < CurrentMagazine + ReserveAmmo) {
+		ReserveAmmo = (ReserveAmmo + CurrentMagazine) + Stats.Magazine;
+		CurrentMagazine = CurrentMagazine + ReserveAmmo;
+	}
+	else if (Stats.Magazine > CurrentMagazine + ReserveAmmo) {
+		CurrentMagazine = CurrentMagazine + ReserveAmmo;
+		ReserveAmmo = 0;
+	}
+}
+
+void AWeaponParent::AddToReserves(int Size)
+{
+	switch (Size) {
+	case 0: // A finder brick
+		break;
+
+	case 1: // A normal brick
+		break;
+
+	default:
+		break;
+	}
+}
+

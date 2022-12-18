@@ -28,6 +28,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 		bool FireBullet();
 
+	UFUNCTION(BlueprintCallable)
+		bool GetCanReload();
+
+	UFUNCTION(BlueprintCallable)
+		void RefilMagazine();
+
+	UFUNCTION(BlueprintCallable)
+		void AddToReserves(int Size);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,7 +66,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
 		int ReserveAmmo;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		bool bCanFire;
+
 	// Player Data
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Data")
 		class APlayerCharacter* Player = nullptr;
 };

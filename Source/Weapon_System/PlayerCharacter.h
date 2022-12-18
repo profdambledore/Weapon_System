@@ -31,6 +31,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 		bool SetNeweapon(FName ID);
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void AimDownSight();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void VisualRecoil();
+
+	UFUNCTION(BlueprintCallable)
+		void SwapToWeapon(int Index);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void StowCurrentWeapon();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,6 +53,15 @@ protected:
 	void MoveY(float AxisValue);
 	void RotateX(float AxisValue);
 	void RotateY(float AxisValue);
+
+	// Player Interaction
+	void Reload();
+	void ADS();
+	void FireCurrentWeapon();
+	void SwapNext();
+	void SwapPrev();
+	void SwapTo(int Index);
+
 
 public:	
 	// Components
@@ -63,6 +84,11 @@ public:
 	// Weapons
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		TArray <AWeaponParent*> CurrentWeapons;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		int CurrentWeaponIndex;
+
+	int NewWeaponIndex;
 
 	bool a = false;
 };

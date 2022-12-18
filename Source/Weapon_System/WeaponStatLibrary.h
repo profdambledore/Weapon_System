@@ -127,6 +127,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCurveFloat* Reload;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* Reserves;
 };
 
 USTRUCT(BlueprintType)
