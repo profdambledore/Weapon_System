@@ -2,6 +2,7 @@
 
 #include "WeaponParent.h"
 
+#include "DamageableInterface.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -42,6 +43,20 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 	return true;
 }
 
+float AWeaponParent::GetDamageFromRange(float TraceDistance)
+{
+	float dist = Stats.Frame.Range.Dropoff->GetFloatValue(Stats.Range);
+	if (TraceDistance <= dist) {
+		return Stats.Frame.Imapct.Damage;
+	}
+	else if (TraceDistance <= dist + Stats.Frame.Range.EndDist) {
+		return (FMath::Lerp(Stats.Frame.Imapct.Damage, Stats.Frame.Imapct.DropoffDamage, TraceDistance - dist / Stats.Frame.Range.EndDist));
+	}
+	else {
+		return Stats.Frame.Imapct.DropoffDamage;
+	}
+}
+
 bool AWeaponParent::FireBullet()
 {
 	// Trace Properties
@@ -61,9 +76,28 @@ bool AWeaponParent::FireBullet()
 		ECC_EngineTraceChannel2,
 		traceParams
 	);
+	CurrentMagazine--;
 
+	// Calculate damage over range and headshot
+	bool bIsCrit;
+	float outDMG = GetDamageFromRange(hitResult.Distance);
+	if (hitResult.BoneName == FName("Head")) { outDMG = outDMG * Stats.Frame.Imapct.CritMulti; bIsCrit = true; }
+	else { bIsCrit = false; }
+
+	// Deal damage to the target
+	bool bDead;
+	IDamageableInterface* inf = Cast<IDamageableInterface>(hitResult.Actor);
+	if (inf) { bDead = inf->TakeAspectDamage(outDMG, EAspectType::Bullet); };
 
 	return false;
+}
+
+void AWeaponParent::StartFire(bool bCantFire)
+{
+}
+
+void AWeaponParent::ContinueFire()
+{
 }
 
 bool AWeaponParent::GetCanReload()

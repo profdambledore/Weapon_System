@@ -12,14 +12,17 @@ APlayerCharacter::APlayerCharacter()
 
 	// Cameras
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("First Person Camera"));
+	FirstPersonCamera->SetRelativeLocation(FVector(10.0f, 0.0f, 90.0f));
 
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Third Person Camera"));
 
 	// Setup Weapon ChildActorComponent
-	KineticWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weapon Component"));
+	KineticWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Kinetic Weapon Component"));
+	EnergyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Energy Weapon Component"));
+	HeavyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Heavy Weapon Component"));
 
 	// Find and store a pointer to the weapon data table
-	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/WeaponTable.WeaponTable"));
+	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/Weapon.Weapon"));
 	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
 
 	CurrentWeapons.SetNum(3);
@@ -30,7 +33,7 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetNeweapon(FName("AR_AD_001"));
 }
 
 // Called every frame
@@ -62,10 +65,12 @@ bool APlayerCharacter::SetNeweapon(FName ID)
 	// Find the weapons info
 	FWeaponInfo* foundWeapon = WeaponDataTable->FindRow<FWeaponInfo>(ID, "", false);
 	if (foundWeapon == nullptr) { return false; }
+	foundWeaponStat = foundWeapon->BaseStats;
 
 	// Set the child actor class and cast to the new class
-	KineticWeaponActor->SetChildActorClass(foundWeapon->BaseStats.Frame.Class);
+	KineticWeaponActor->SetChildActorClass(foundWeaponStat.Frame.Class);
 	AWeaponParent* nw = Cast<AWeaponParent>(KineticWeaponActor->GetChildActor());
+	if (nw != nullptr) { UE_LOG(LogTemp, Warning, TEXT("not null")); }
 	nw->Player = this;
 
 	// Store the weapon at the correct index in the weapon array

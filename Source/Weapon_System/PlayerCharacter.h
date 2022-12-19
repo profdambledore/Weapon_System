@@ -77,6 +77,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UChildActorComponent* KineticWeaponActor;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UChildActorComponent* EnergyWeaponActor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UChildActorComponent* HeavyWeaponActor;
+
 	// Weapon Data Table
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		UDataTable* WeaponDataTable = nullptr;
@@ -87,6 +93,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		int CurrentWeaponIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		FWeaponStats foundWeaponStat;
 
 	int NewWeaponIndex;
 

@@ -96,6 +96,19 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FRange : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* Dropoff;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float EndDist;
+};
+
+USTRUCT(BlueprintType)
 struct FWeaponFrame : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
@@ -117,7 +130,7 @@ public:
 		FImpact Imapct;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCurveFloat* Range;
+		FRange Range;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCurveFloat* Stability;

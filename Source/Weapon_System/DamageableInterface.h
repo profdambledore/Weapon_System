@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WeaponStatLibrary.h"
+
 #include "DamageableInterface.generated.h"
 
 // This class does not need to be modified.
@@ -13,13 +15,11 @@ class UDamageableInterface : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
 class WEAPON_SYSTEM_API IDamageableInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual bool TakeAspectDamage(float Damage, EAspectType Type);
 };

@@ -29,6 +29,12 @@ public:
 		bool FireBullet();
 
 	UFUNCTION(BlueprintCallable)
+		virtual void StartFire(bool bCantFire);
+
+	UFUNCTION(BlueprintCallable)
+		virtual void ContinueFire();
+
+	UFUNCTION(BlueprintCallable)
 		bool GetCanReload();
 
 	UFUNCTION(BlueprintCallable)
@@ -40,6 +46,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	float GetDamageFromRange(float TraceDistance);
 
 public:	
 	// Components

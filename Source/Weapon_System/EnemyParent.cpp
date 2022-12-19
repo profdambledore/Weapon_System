@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "EnemyParent.h"
 
 // Sets default values
@@ -30,5 +29,21 @@ void AEnemyParent::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool AEnemyParent::TakeAspectDamage(float Damage, EAspectType Type)
+{
+	if (CurrentHealth <= 0) {
+		return true;
+	}
+	else {
+		CurrentHealth = CurrentHealth - Damage;
+		if (CurrentHealth <= 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
 
