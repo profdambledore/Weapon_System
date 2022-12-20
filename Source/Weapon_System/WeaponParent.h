@@ -7,6 +7,7 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "WeaponStatLibrary.h"
+#include "DrawDebugHelpers.h"
 
 #include "WeaponParent.generated.h"
 

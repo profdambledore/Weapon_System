@@ -5,13 +5,15 @@
 
 void AFullAutoTrigger::StartFire(bool bCantFire)
 {
+	bool bHit;
 	bCanFire = bCantFire;
-	if (bCanFire) {
+	if (bCantFire == true) {
 		if (CurrentMagazine > 0) {
-			FireBullet();
+			bHit = FireBullet();
 			// VisRecoil
 			// ActualRecoil
-			GetWorldTimerManager().SetTimer(AutoTimerHandle, this, &AFullAutoTrigger::ContinueFire, Stats.Frame.Imapct.RateOfFire / 60, true);
+			UE_LOG(LogTemp, Warning, TEXT("%f"), 60.0f / Stats.Frame.Imapct.RateOfFire)
+			GetWorldTimerManager().SetTimer(AutoTimerHandle, this, &AFullAutoTrigger::ContinueFire, 60.0f / Stats.Frame.Imapct.RateOfFire , true);
 		}
 		else {
 			GetCanReload();
@@ -24,10 +26,13 @@ void AFullAutoTrigger::StartFire(bool bCantFire)
 
 void AFullAutoTrigger::ContinueFire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Continue Fire"))
+	bool bHit;
 	if (CurrentMagazine > 0) {
-		FireBullet();
+		bHit = FireBullet();
 		// VisRecoil
 		// ActualRecoil
+		UE_LOG(LogTemp, Warning, TEXT("Continue Fire"))
 	}
 	else {
 		GetCanReload();

@@ -83,6 +83,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UChildActorComponent* HeavyWeaponActor;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* WeaponLoc;
+
 	// Weapon Data Table
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		UDataTable* WeaponDataTable = nullptr;
@@ -92,12 +95,13 @@ public:
 		TArray <AWeaponParent*> CurrentWeapons;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
-		int CurrentWeaponIndex;
+		int CurrentWeaponIndex = 0;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		FWeaponStats foundWeaponStat;
 
 	int NewWeaponIndex;
 
+	bool bFireHeld = false;
 	bool a = false;
 };

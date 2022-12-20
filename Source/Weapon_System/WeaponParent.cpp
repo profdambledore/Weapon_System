@@ -59,12 +59,13 @@ float AWeaponParent::GetDamageFromRange(float TraceDistance)
 
 bool AWeaponParent::FireBullet()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Firing Bullet"))
 	// Trace Properties
 	FHitResult hitResult(ForceInit);
 	FVector start = Player->FirstPersonCamera->GetComponentLocation();
 	FVector end = start + (Player->FirstPersonCamera->GetForwardVector() * 20000);
 
-	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("RV_Trace")), true, this);
+	FCollisionQueryParams traceParams = FCollisionQueryParams();
 	traceParams.bTraceComplex = true;
 	traceParams.bReturnPhysicalMaterial = false;
 
@@ -76,6 +77,7 @@ bool AWeaponParent::FireBullet()
 		ECC_EngineTraceChannel2,
 		traceParams
 	);
+	DrawDebugLine(GetWorld(), FVector(0.0f, 0.0f, 500.0f), FVector(2000.0f, 0.0f, 500.0f), FColor::Orange, false, 2.0f);
 	CurrentMagazine--;
 
 	// Calculate damage over range and headshot

@@ -21,18 +21,23 @@ APlayerCharacter::APlayerCharacter()
 	EnergyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Energy Weapon Component"));
 	HeavyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Heavy Weapon Component"));
 
+	WeaponLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Location"));
+	WeaponLoc->SetRelativeLocation(FVector(10.0f, 0.0f, 80.0f));
+
 	// Find and store a pointer to the weapon data table
 	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/Weapon.Weapon"));
 	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
 
 	CurrentWeapons.SetNum(3);
-
 }
 
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
+	KineticWeaponActor->AttachToComponent(WeaponLoc, attachRules, "");
+
 	SetNeweapon(FName("AR_AD_001"));
 }
 
@@ -57,7 +62,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &APlayerCharacter::Reload);
 	PlayerInputComponent->BindAction("AimDownSight", IE_Pressed, this, &APlayerCharacter::ADS);
 	PlayerInputComponent->BindAction("AimDownSight", IE_Released, this, &APlayerCharacter::ADS);
-
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerCharacter::FireCurrentWeapon);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APlayerCharacter::FireCurrentWeapon);
 }
 
 bool APlayerCharacter::SetNeweapon(FName ID)
@@ -140,6 +146,9 @@ void APlayerCharacter::ADS()
 
 void APlayerCharacter::FireCurrentWeapon()
 {
+	if (bFireHeld == false) { bFireHeld = true; }
+	else { bFireHeld = false; }
+	CurrentWeapons[CurrentWeaponIndex]->StartFire(bFireHeld);
 }
 
 // Swapping Functions
