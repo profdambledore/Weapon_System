@@ -21,8 +21,11 @@ APlayerCharacter::APlayerCharacter()
 	EnergyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Energy Weapon Component"));
 	HeavyWeaponActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Heavy Weapon Component"));
 
-	WeaponLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Location"));
-	WeaponLoc->SetRelativeLocation(FVector(10.0f, 0.0f, 80.0f));
+	ActiveWeaponLoc = CreateDefaultSubobject<USceneComponent>(TEXT("Active Weapon Location"));
+	ActiveWeaponLoc->SetRelativeLocation(FVector(30.0f, 20.0f, 70.0f));
+
+	WeaponBackL = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Back Left"));
+	WeaponBackR = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Back Right"));
 
 	// Find and store a pointer to the weapon data table
 	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/Weapon.Weapon"));
@@ -36,7 +39,9 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
-	KineticWeaponActor->AttachToComponent(WeaponLoc, attachRules, "");
+	KineticWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+	EnergyWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
+	HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
 
 	SetNeweapon(FName("AR_AD_001"));
 }
@@ -183,10 +188,22 @@ void APlayerCharacter::SwapTo(int Index)
 
 void APlayerCharacter::SwapToWeapon(int Index)
 {
-	FAttachmentTransformRules attachRulesA(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapons[CurrentWeaponIndex]->AttachToComponent(GetMesh(), attachRulesA, "");
+	// Attach the old weapon to a slot on the back
+	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
+	CurrentWeapons[CurrentWeaponIndex]->AttachToComponent(ActiveWeaponLoc, attachRules, "");
 
-	FAttachmentTransformRules attachRulesB(EAttachmentRule::KeepRelative, false);
-	CurrentWeapons[Index]->AttachToComponent(GetMesh(), attachRulesB, "");
+	// Attach the new weapon to the ActiveWeapon component
+	bool bfirstslot = false;
+	for (int i = 0; i >= 2; i++) {
+		if (i != Index) {
+			if (bfirstslot == false) {
+				CurrentWeapons[i]->AttachToComponent(WeaponBackL, attachRules, "");
+			}
+			else {
+				CurrentWeapons[i]->AttachToComponent(WeaponBackR, attachRules, "");
+			}
+		}
+	}
+	CurrentWeapons[Index]->AttachToComponent(ActiveWeaponLoc, attachRules, "");
 	CurrentWeaponIndex = Index;
 }

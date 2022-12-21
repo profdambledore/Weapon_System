@@ -84,7 +84,13 @@ public:
 		UChildActorComponent* HeavyWeaponActor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-		USceneComponent* WeaponLoc;
+		USceneComponent* ActiveWeaponLoc;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* WeaponBackL;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* WeaponBackR;
 
 	// Weapon Data Table
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
