@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "WeaponParent.h"
+#include "DamageNumberController.h"
 
 #include "PlayerCharacter.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -27,6 +29,11 @@ APlayerCharacter::APlayerCharacter()
 	WeaponBackL = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Back Left"));
 	WeaponBackR = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Back Right"));
 
+	// Attach the scene components to the mesh
+	ActiveWeaponLoc->SetupAttachment(GetMesh());
+	WeaponBackL->SetupAttachment(GetMesh());
+	WeaponBackR->SetupAttachment(GetMesh());
+
 	// Find and store a pointer to the weapon data table
 	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/Weapon.Weapon"));
 	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
@@ -38,10 +45,15 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Attach weapons to slots
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
 	KineticWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
 	EnergyWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
 	HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
+
+	// Find a damage number controller in the world and store it's pointer
+	DamageNumberCtrl = Cast<ADamageNumberController>(UGameplayStatics::GetActorOfClass(GetWorld(), ADamageNumberController::StaticClass()));
 
 	SetNeweapon(FName("AR_AD_001"));
 }
@@ -69,6 +81,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("AimDownSight", IE_Released, this, &APlayerCharacter::ADS);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APlayerCharacter::FireCurrentWeapon);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APlayerCharacter::FireCurrentWeapon);
+	PlayerInputComponent->BindAction("SwapNext", IE_Pressed, this, &APlayerCharacter::SwapNext);
+	PlayerInputComponent->BindAction("SwapPrevious", IE_Pressed, this, &APlayerCharacter::SwapPrev);
 }
 
 bool APlayerCharacter::SetNeweapon(FName ID)
@@ -188,22 +202,32 @@ void APlayerCharacter::SwapTo(int Index)
 
 void APlayerCharacter::SwapToWeapon(int Index)
 {
-	// Attach the old weapon to a slot on the back
+	// Make attach data
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapons[CurrentWeaponIndex]->AttachToComponent(ActiveWeaponLoc, attachRules, "");
 
 	// Attach the new weapon to the ActiveWeapon component
 	bool bfirstslot = false;
-	for (int i = 0; i >= 2; i++) {
-		if (i != Index) {
-			if (bfirstslot == false) {
-				CurrentWeapons[i]->AttachToComponent(WeaponBackL, attachRules, "");
-			}
-			else {
-				CurrentWeapons[i]->AttachToComponent(WeaponBackR, attachRules, "");
-			}
-		}
+	switch (Index) {
+	case 0: // Kinetic to set held
+		KineticWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		EnergyWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
+		HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
+		break;
+
+	case 1: // Energy to set held
+		EnergyWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		KineticWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
+		HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
+		break;
+
+	case 2: // Heavy to set held
+		HeavyWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		KineticWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
+		EnergyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
+		break;
+
+	default:
+		break;
 	}
-	CurrentWeapons[Index]->AttachToComponent(ActiveWeaponLoc, attachRules, "");
 	CurrentWeaponIndex = Index;
 }

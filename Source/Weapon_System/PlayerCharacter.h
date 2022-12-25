@@ -8,10 +8,13 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/ChildActorComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "WeaponStatLibrary.h"
 
 #include "PlayerCharacter.generated.h"
+
+class ADamageNumberController;
 
 UCLASS()
 class WEAPON_SYSTEM_API APlayerCharacter : public ACharacter
@@ -97,7 +100,7 @@ public:
 		UDataTable* WeaponDataTable = nullptr;
 
 	// Weapons
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data Table")
 		TArray <AWeaponParent*> CurrentWeapons;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
@@ -105,6 +108,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		FWeaponStats foundWeaponStat;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		ADamageNumberController* DamageNumberCtrl;
 
 	int NewWeaponIndex;
 

@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "Components/TimelineComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
 #include "DamageNumber.generated.h"
 
 UCLASS()
@@ -15,12 +20,44 @@ public:
 	// Sets default values for this actor's properties
 	ADamageNumber();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+		bool NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+		void TravelLineCallback(float val);
 
+	UFUNCTION()
+		void TravelLineFinishedCallback();
+public:	
+	// Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* Core;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UWidgetComponent* Widget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UTimelineComponent* TravelLine;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UCurveFloat* TimelineCurve;
+
+	float Distance;
+	FVector StartLoc;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bInUse;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bCrit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int Damage;
 };
