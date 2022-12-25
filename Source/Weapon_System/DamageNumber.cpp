@@ -53,7 +53,7 @@ void ADamageNumber::Tick(float DeltaTime)
 	if (bInUse) {
 		FRotator playerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
 		playerRot = FRotator(0.0f, playerRot.Yaw, 0.0f);
-		SetActorRotation(playerRot);
+		Widget->SetRelativeRotation(playerRot);
 	}
 
 }
@@ -75,6 +75,8 @@ bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
 	// Choose a random diretction to move in
 	float randomDir = FMath::FRandRange(-180, 179);
 	Core->SetWorldRotation(FRotator(0.0f, randomDir, 0.0f));
+
+	TravelLine->PlayFromStart();
 
 	return true;
 }
