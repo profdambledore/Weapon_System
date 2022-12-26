@@ -37,7 +37,7 @@ void ADamageNumberController::Tick(float DeltaTime)
 
 void ADamageNumberController::GetNewDamageNumber(FVector Loc, bool bCrit, int Damage)
 {
-	for (int i = 0; i <= DamageNumbers.Num(); i++) {
+	for (int i = 0; i <= DamageNumbers.Num() -1; i++) {
 		if (DamageNumbers[i]->bInUse == false){
 			DamageNumbers[i]->NewDamageNumber(Loc, bCrit, Damage);
 			break;
