@@ -6,8 +6,11 @@
 // Sets default values
 ADamageNumberController::ADamageNumberController()
 {
+
+	Core = CreateDefaultSubobject<USceneComponent>(TEXT("Core"));
+
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -19,7 +22,7 @@ void ADamageNumberController::BeginPlay()
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	for (int i = 0; i >= DamageNumbersToSpawn; i++) {
+	for (int i = 0; i <= DamageNumbersToSpawn; i++) {
 		ADamageNumber* newNumber = GetWorld()->SpawnActor<ADamageNumber>(ADamageNumber::StaticClass(), FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 		DamageNumbers.Add(newNumber);
 	}
@@ -34,9 +37,10 @@ void ADamageNumberController::Tick(float DeltaTime)
 
 void ADamageNumberController::GetNewDamageNumber(FVector Loc, bool bCrit, int Damage)
 {
-	for (int i = 0; i >= DamageNumbers.Num(); i++) {
-		if (DamageNumbers[i]->bInUse == true){
+	for (int i = 0; i <= DamageNumbers.Num(); i++) {
+		if (DamageNumbers[i]->bInUse == false){
 			DamageNumbers[i]->NewDamageNumber(Loc, bCrit, Damage);
+			break;
 		}
 	}
 }

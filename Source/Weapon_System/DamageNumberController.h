@@ -29,8 +29,12 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* Core;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		TArray<ADamageNumber*> DamageNumbers;
 
 private:
 	int DamageNumbersToSpawn = 8;
-	TArray<ADamageNumber*> DamageNumbers;
 };

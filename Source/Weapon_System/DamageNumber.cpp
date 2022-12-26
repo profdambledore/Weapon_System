@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "DamageNumberWidget.h"
 #include "DamageNumber.h"
 
 // Sets default values
@@ -14,27 +14,23 @@ ADamageNumber::ADamageNumber()
 	// Find the Widget for the DamageNumber
 	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	Widget->SetupAttachment(Core);
-	static ConstructorHelpers::FClassFinder<UUserWidget> FoundWidget(TEXT(""));
+	static ConstructorHelpers::FClassFinder<UUserWidget> FoundWidget(TEXT("/Game/Weapons/BP_DNW"));
 	if (FoundWidget.Succeeded())
 	{
-		//Widget->SetWidgetClass(FoundWidget.Class);
+		Widget->SetWidgetClass(FoundWidget.Class);
 	}
 
 	// Find the curve for the timeline
-	static ConstructorHelpers::FObjectFinder<UCurveFloat>CurveObj(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UCurveFloat>CurveObj(TEXT("/Game/Weapons/C_DNTimeline.C_DNTimeline"));
 	if (CurveObj.Succeeded()) { TimelineCurve = CurveObj.Object; };
 
 	TravelLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("Traveline"));
-	TravelLine->SetPropertySetObject(this);
-	TravelLine->SetLooping(false);
-	TravelLine->SetPlaybackPosition(0.0f, false);
-
-	FOnTimelineFloat onTimelineCallback;
-	FOnTimelineEventStatic onTimelineFinishedCallback;
 
 	// Bind timeline functions
 	onTimelineCallback.BindUFunction(this, FName{ TEXT("TravelLineCallback") });
 	onTimelineFinishedCallback.BindUFunction(this, FName{ TEXT("TravelLineFinishedCallback") });
+	TravelLine->AddInterpFloat(TimelineCurve, onTimelineCallback, FName{ TEXT("TravelLineCu") });
+	TravelLine->SetTimelineFinishedFunc(onTimelineFinishedCallback);	
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +38,10 @@ void ADamageNumber::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Cast and store a pointer to the widget
+	WidgetRef = Cast<UDamageNumberWidget>(Widget->GetWidget());
+
+	TravelLine->SetPlaybackPosition(0.0f, true);
 }
 
 // Called every frame
@@ -49,8 +49,11 @@ void ADamageNumber::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TravelLine->TickComponent(DeltaTime, ELevelTick::LEVELTICK_TimeOnly, NULL);
+
 	// Set the widget to look at the player if its active
-	if (bInUse) {
+	if (bInUse == true) {
+		// Rotate widget to face player
 		FRotator playerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
 		playerRot = FRotator(0.0f, playerRot.Yaw, 0.0f);
 		Widget->SetRelativeRotation(playerRot);
@@ -71,10 +74,11 @@ bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
 	bCrit = bNewCrit;
 
 	// Call widget updater
+	WidgetRef->SetNewDamage(bNewCrit, NewDamage);
 
 	// Choose a random diretction to move in
 	float randomDir = FMath::FRandRange(-180, 179);
-	Core->SetWorldRotation(FRotator(0.0f, randomDir, 0.0f));
+	//Core->SetWorldRotation(FRotator(0.0f, randomDir, 0.0f));
 
 	TravelLine->PlayFromStart();
 
@@ -83,7 +87,9 @@ bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
 
 void ADamageNumber::TravelLineCallback(float val)
 {
-	FMath::Lerp(StartLoc, FVector(StartLoc.X + Distance, StartLoc.Y, StartLoc.Z), val);
+	// Update World Location
+	UE_LOG(LogTemp, Warning, TEXT("%f"), val);
+	SetActorLocation(FMath::Lerp(StartLoc, FVector(StartLoc.X + Distance, StartLoc.Y, StartLoc.Z), val));
 }
 
 void ADamageNumber::TravelLineFinishedCallback()
@@ -91,4 +97,3 @@ void ADamageNumber::TravelLineFinishedCallback()
 	bInUse = false;
 	SetActorLocation(FVector(0.0F, 0.0F, 0.0F));
 }
-

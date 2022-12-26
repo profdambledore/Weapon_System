@@ -8,8 +8,11 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "WeaponStatLibrary.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetStringLibrary.h"
 
 #include "WeaponParent.generated.h"
+
+class ADamageNumberController;
 
 UCLASS()
 class WEAPON_SYSTEM_API AWeaponParent : public AActor

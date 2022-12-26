@@ -3,6 +3,7 @@
 #include "WeaponParent.h"
 
 #include "DamageableInterface.h"
+#include "DamageNumberController.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -69,27 +70,40 @@ bool AWeaponParent::FireBullet()
 	traceParams.bTraceComplex = true;
 	traceParams.bReturnPhysicalMaterial = false;
 
+	bool bhitsomething;
 	// Complete Trace
-	GetWorld()->LineTraceSingleByChannel(
+	bhitsomething = GetWorld()->LineTraceSingleByChannel(
 		hitResult,
 		start,
 		end,
-		ECC_EngineTraceChannel2,
+		ECC_GameTraceChannel1,
 		traceParams
 	);
-	DrawDebugLine(GetWorld(), FVector(0.0f, 0.0f, 500.0f), FVector(2000.0f, 0.0f, 500.0f), FColor::Orange, false, 2.0f);
+
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+			UKismetStringLibrary::Conv_NameToString(hitResult.BoneName));
+	}
+
+	DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2.0f, 0, 4.0f);
 	CurrentMagazine--;
 
-	// Calculate damage over range and headshot
-	bool bIsCrit;
-	float outDMG = GetDamageFromRange(hitResult.Distance);
-	if (hitResult.BoneName == FName("Head")) { outDMG = outDMG * Stats.Frame.Imapct.CritMulti; bIsCrit = true; }
-	else { bIsCrit = false; }
-
-	// Deal damage to the target
+	// Check if the target is a damageable
 	bool bDead;
 	IDamageableInterface* inf = Cast<IDamageableInterface>(hitResult.Actor);
-	if (inf) { bDead = inf->TakeAspectDamage(outDMG, EAspectType::Bullet); };
+	if (inf) {
+		UE_LOG(LogTemp, Warning, TEXT("Hit Damageable"));
+		
+		// Calculate the damage to deal
+		bool bIsCrit;
+		float outDMG = GetDamageFromRange(hitResult.Distance);
+		if (hitResult.BoneName == FName("head")) { outDMG = outDMG * Stats.Frame.Imapct.CritMulti; bIsCrit = true; }
+		else { bIsCrit = false; }
+
+		// Damage the target
+		bDead = inf->TakeAspectDamage(outDMG, EAspectType::Bullet);
+		Player->DamageNumberCtrl->GetNewDamageNumber(hitResult.Location, bIsCrit, outDMG);
+	};
 
 	return false;
 }

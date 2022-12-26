@@ -11,6 +11,8 @@
 
 #include "DamageNumber.generated.h"
 
+class UDamageNumberWidget;
+
 UCLASS()
 class WEAPON_SYSTEM_API ADamageNumber : public AActor
 {
@@ -49,9 +51,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCurveFloat* TimelineCurve;
 
-	float Distance;
+	FOnTimelineFloat onTimelineCallback;
+	FOnTimelineEventStatic onTimelineFinishedCallback;
+
+	float Distance = 200;
 	FVector StartLoc;
-	
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool bInUse;
 
@@ -60,4 +65,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int Damage;
+
+	UDamageNumberWidget* WidgetRef;
 };
