@@ -55,6 +55,8 @@ public:
 	FOnTimelineEventStatic onTimelineFinishedCallback;
 
 	float Distance = 200;
+	float DistX;
+	float DistY;
 	FVector StartLoc;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

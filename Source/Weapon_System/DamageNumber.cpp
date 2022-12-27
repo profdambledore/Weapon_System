@@ -19,6 +19,8 @@ ADamageNumber::ADamageNumber()
 	{
 		Widget->SetWidgetClass(FoundWidget.Class);
 	}
+	Widget->SetDrawSize(FVector2D(400.0f, 100.0f));
+	Widget->SetRelativeLocation(FVector(200.0f, 50.0f, 0.0f));
 
 	// Find the curve for the timeline
 	static ConstructorHelpers::FObjectFinder<UCurveFloat>CurveObj(TEXT("/Game/Weapons/C_DNTimeline.C_DNTimeline"));
@@ -56,9 +58,8 @@ void ADamageNumber::Tick(float DeltaTime)
 		// Rotate widget to face player
 		FRotator playerRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
 		playerRot = FRotator(0.0f, playerRot.Yaw, 0.0f);
-		Widget->SetRelativeRotation(playerRot);
+		SetActorRotation(playerRot);
 	}
-
 }
 
 bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
@@ -77,8 +78,8 @@ bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
 	WidgetRef->SetNewDamage(bNewCrit, NewDamage);
 
 	// Choose a random diretction to move in
-	float randomDir = FMath::FRandRange(-180, 179);
-	//Core->SetWorldRotation(FRotator(0.0f, randomDir, 0.0f));
+	DistX = FMath::FRandRange((Distance * -1), Distance);
+	DistY = FMath::FRandRange((Distance * -1), Distance);	
 
 	TravelLine->PlayFromStart();
 
@@ -89,7 +90,7 @@ void ADamageNumber::TravelLineCallback(float val)
 {
 	// Update World Location
 	UE_LOG(LogTemp, Warning, TEXT("%f"), val);
-	SetActorLocation(FMath::Lerp(StartLoc, FVector(StartLoc.X + Distance, StartLoc.Y, StartLoc.Z), val));
+	SetActorLocation(FMath::Lerp(StartLoc, FVector(StartLoc.X + DistX, StartLoc.Y, StartLoc.Z + DistY), val));
 }
 
 void ADamageNumber::TravelLineFinishedCallback()
