@@ -46,12 +46,12 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 
 float AWeaponParent::GetDamageFromRange(float TraceDistance)
 {
-	float dist = Stats.Frame.Range.Dropoff->GetFloatValue(Stats.Range);
+	float dist = Stats.Frame.Range.Dropoff->GetFloatValue(Stats.Range) * 1000;
 	if (TraceDistance <= dist) {
 		return Stats.Frame.Imapct.Damage;
 	}
 	else if (TraceDistance <= dist + Stats.Frame.Range.EndDist) {
-		return (FMath::Lerp(Stats.Frame.Imapct.Damage, Stats.Frame.Imapct.DropoffDamage, TraceDistance - dist / Stats.Frame.Range.EndDist));
+		return (FMath::Lerp(Stats.Frame.Imapct.Damage, Stats.Frame.Imapct.DropoffDamage, (TraceDistance - dist) / Stats.Frame.Range.EndDist));
 	}
 	else {
 		return Stats.Frame.Imapct.DropoffDamage;
@@ -97,7 +97,10 @@ bool AWeaponParent::FireBullet()
 		// Calculate the damage to deal
 		bool bIsCrit;
 		float outDMG = GetDamageFromRange(hitResult.Distance);
-		if (hitResult.BoneName == FName("head")) { outDMG = outDMG * Stats.Frame.Imapct.CritMulti; bIsCrit = true; }
+		if (hitResult.BoneName == FName("head")) { 
+			outDMG = outDMG * Stats.Frame.Imapct.CritMulti; 
+			bIsCrit = true;
+		}
 		else { bIsCrit = false; }
 
 		// Damage the target

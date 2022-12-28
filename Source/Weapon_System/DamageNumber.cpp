@@ -96,5 +96,5 @@ void ADamageNumber::TravelLineCallback(float val)
 void ADamageNumber::TravelLineFinishedCallback()
 {
 	bInUse = false;
-	SetActorLocation(FVector(0.0F, 0.0F, 0.0F));
+	SetActorLocation(FVector(0.0F, -200.0F, 0.0F));
 }
