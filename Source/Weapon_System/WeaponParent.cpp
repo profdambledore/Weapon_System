@@ -37,6 +37,9 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 	Stats = NewStats;
 	CurrentMagazine = Stats.Magazine;
 
+	// Update speed stats
+	Player->SetADSSpeed(0.35f);
+
 	// Set the visuals of the weapon
 	Body->SetSkeletalMesh(NewVisual.BodyMesh);
 	Magazine->SetSkeletalMesh(NewVisual.MagazineMesh);
@@ -111,11 +114,11 @@ bool AWeaponParent::FireBullet()
 	return false;
 }
 
-void AWeaponParent::StartFire(bool bCantFire)
+void AWeaponParent::StartFire(bool bCantFire) // Only overrided
 {
 }
 
-void AWeaponParent::ContinueFire()
+void AWeaponParent::ContinueFire() // Only overrided
 {
 }
 
@@ -153,5 +156,9 @@ void AWeaponParent::AddToReserves(int Size)
 	default:
 		break;
 	}
+}
+
+void AWeaponParent::UpdateStat(EStatsType StatToUpdate)
+{
 }
 

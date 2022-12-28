@@ -55,6 +55,9 @@ void APlayerCharacter::BeginPlay()
 	// Find a damage number controller in the world and store it's pointer
 	DamageNumberCtrl = Cast<ADamageNumberController>(UGameplayStatics::GetActorOfClass(GetWorld(), ADamageNumberController::StaticClass()));
 
+	// Set the weapon rest location (WeaponLoc)
+	WeaponLoc = ActiveWeaponLoc->GetRelativeLocation();
+
 	SetNeweapon(FName("AR_AD_001"));
 }
 
@@ -161,6 +164,7 @@ void APlayerCharacter::Reload()
 
 void APlayerCharacter::ADS()
 {
+	AimDownSight();
 }
 
 void APlayerCharacter::FireCurrentWeapon()

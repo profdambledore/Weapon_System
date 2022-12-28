@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void AddToReserves(int Size);
 
+	UFUNCTION(BlueprintCallable)
+		void UpdateStat(EStatsType StatToUpdate);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

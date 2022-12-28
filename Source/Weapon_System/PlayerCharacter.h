@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void VisualRecoil();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetADSSpeed(float NewSpeed);
+
 	UFUNCTION(BlueprintCallable)
 		void SwapToWeapon(int Index);
 
@@ -106,11 +109,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		int CurrentWeaponIndex = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
-		FWeaponStats foundWeaponStat;
+	FWeaponStats foundWeaponStat;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		ADamageNumberController* DamageNumberCtrl;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+		FVector WeaponLoc;
 
 	int NewWeaponIndex;
 

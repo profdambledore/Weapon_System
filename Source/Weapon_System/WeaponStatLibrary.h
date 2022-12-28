@@ -36,6 +36,7 @@ enum EAspectType
 UENUM()
 enum EStatsType
 {
+	None UMETA(DisplayName = "None"),
 	Dropoff UMETA(Display Name = "Dropoff"),
 	Draw UMETA(Display Name = "Draw"),
 	Stow UMETA(Display Name = "Stow"),
