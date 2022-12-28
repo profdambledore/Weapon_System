@@ -183,7 +183,7 @@ public:
 		float Recoil;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int Zoom;
+		float Zoom;
 };
 
 USTRUCT(BlueprintType)
