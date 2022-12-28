@@ -160,6 +160,9 @@ void APlayerCharacter::RotateY(float AxisValue)
 
 void APlayerCharacter::Reload()
 {
+	if (CurrentWeapons[CurrentWeaponIndex]->GetCanReload()){
+		VisualReload();
+	}
 }
 
 void APlayerCharacter::ADS()
@@ -169,9 +172,11 @@ void APlayerCharacter::ADS()
 
 void APlayerCharacter::FireCurrentWeapon()
 {
-	if (bFireHeld == false) { bFireHeld = true; }
-	else { bFireHeld = false; }
-	CurrentWeapons[CurrentWeaponIndex]->StartFire(bFireHeld);
+	if (bInReload != true) {
+		if (bFireHeld == false) { bFireHeld = true; }
+		else { bFireHeld = false; }
+		CurrentWeapons[CurrentWeaponIndex]->StartFire(bFireHeld);
+	}
 }
 
 // Swapping Functions

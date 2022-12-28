@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FullAutoTrigger.h"
+
+#include "PlayerCharacter.h"
 
 void AFullAutoTrigger::StartFire(bool bCantFire)
 {
@@ -16,7 +17,7 @@ void AFullAutoTrigger::StartFire(bool bCantFire)
 			GetWorldTimerManager().SetTimer(AutoTimerHandle, this, &AFullAutoTrigger::ContinueFire, 60.0f / Stats.Frame.Imapct.RateOfFire , true);
 		}
 		else {
-			GetCanReload();
+			Player->Reload();
 		}
 	}
 	else {
@@ -35,6 +36,6 @@ void AFullAutoTrigger::ContinueFire()
 		UE_LOG(LogTemp, Warning, TEXT("Continue Fire"))
 	}
 	else {
-		GetCanReload();
+		Player->Reload();
 	}
 }

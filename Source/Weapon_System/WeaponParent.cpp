@@ -15,6 +15,7 @@ AWeaponParent::AWeaponParent()
 	// Create Default Sub-Objects
 	Body = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
 	Magazine = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Magazine"));
+	Magazine->SetupAttachment(Body, FName("MagazineSocket"));
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +45,9 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 	Body->SetSkeletalMesh(NewVisual.BodyMesh);
 	Magazine->SetSkeletalMesh(NewVisual.MagazineMesh);
 
+	// Set the magazine to the Body's magazine location
+	//Magazine->SetRelativeLocation(Body->GetSocketLocation(FName("MagazineSocket")));
+
 	return true;
 }
 
@@ -63,7 +67,6 @@ float AWeaponParent::GetDamageFromRange(float TraceDistance)
 
 bool AWeaponParent::FireBullet()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Firing Bullet"))
 	// Trace Properties
 	FHitResult hitResult(ForceInit);
 	FVector start = Player->FirstPersonCamera->GetComponentLocation();
@@ -86,6 +89,8 @@ bool AWeaponParent::FireBullet()
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
 			UKismetStringLibrary::Conv_NameToString(hitResult.BoneName));
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green,
+			UKismetStringLibrary::Conv_IntToString(CurrentMagazine));
 	}
 
 	DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2.0f, 0, 4.0f);
@@ -94,9 +99,7 @@ bool AWeaponParent::FireBullet()
 	// Check if the target is a damageable
 	bool bDead;
 	IDamageableInterface* inf = Cast<IDamageableInterface>(hitResult.Actor);
-	if (inf) {
-		UE_LOG(LogTemp, Warning, TEXT("Hit Damageable"));
-		
+	if (inf) {		
 		// Calculate the damage to deal
 		bool bIsCrit;
 		float outDMG = GetDamageFromRange(hitResult.Distance);
@@ -124,8 +127,8 @@ void AWeaponParent::ContinueFire() // Only overrided
 
 bool AWeaponParent::GetCanReload()
 {
-	if (ReserveAmmo == -1 || ReserveAmmo >= 1) { return true; };
-
+	if ((ReserveAmmo == -1 || ReserveAmmo >= 1) && CurrentMagazine < Stats.Magazine) { return true; };
+	
 	return false;
 }
 

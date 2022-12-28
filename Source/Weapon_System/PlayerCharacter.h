@@ -38,6 +38,12 @@ public:
 		void AimDownSight();
 
 	UFUNCTION(BlueprintImplementableEvent)
+		void VisualReload();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void CancelReload();
+
+	UFUNCTION(BlueprintImplementableEvent)
 		void VisualRecoil();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -49,6 +55,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void StowCurrentWeapon();
 
+	void Reload();
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,7 +68,6 @@ protected:
 	void RotateY(float AxisValue);
 
 	// Player Interaction
-	void Reload();
 	void ADS();
 	void FireCurrentWeapon();
 	void SwapNext();
@@ -116,6 +122,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		FVector WeaponLoc;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
+		bool bInReload;
 
 	int NewWeaponIndex;
 

@@ -79,10 +79,10 @@ public:
 		int CurrentMagazine;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
-		int ReserveAmmo;
+		int ReserveAmmo = -1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
-		bool bCanFire;
+		bool bCanFire = true;
 
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Data")
