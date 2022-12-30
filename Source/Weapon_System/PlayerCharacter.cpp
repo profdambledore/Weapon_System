@@ -59,6 +59,7 @@ void APlayerCharacter::BeginPlay()
 	WeaponLoc = ActiveWeaponLoc->GetRelativeLocation();
 
 	SetNeweapon(FName("AR_AD_001"));
+	SetNeweapon(FName("SMG_LW_001"));
 }
 
 // Called every frame
@@ -90,19 +91,37 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 bool APlayerCharacter::SetNeweapon(FName ID)
 {
+	//
+	int sI;
+	UChildActorComponent* cA;
+
 	// Find the weapons info
 	FWeaponInfo* foundWeapon = WeaponDataTable->FindRow<FWeaponInfo>(ID, "", false);
 	if (foundWeapon == nullptr) { return false; }
 	foundWeaponStat = foundWeapon->BaseStats;
 
+	// Get the correct slot to set
+	if (foundWeapon->BaseStats.Frame.Ammo == EAmmoType::Heavy){
+		cA = HeavyWeaponActor;
+		sI = 2;
+	}
+	else if (foundWeapon->BaseStats.Element != EAspectType::Bullet){
+		cA = EnergyWeaponActor;
+		sI = 1;
+	}
+	else{
+		cA = KineticWeaponActor;
+		sI = 0;
+	}
+
 	// Set the child actor class and cast to the new class
-	KineticWeaponActor->SetChildActorClass(foundWeaponStat.Frame.Class);
-	AWeaponParent* nw = Cast<AWeaponParent>(KineticWeaponActor->GetChildActor());
+	cA->SetChildActorClass(foundWeaponStat.Frame.Class);
+	AWeaponParent* nw = Cast<AWeaponParent>(cA->GetChildActor());
 	if (nw != nullptr) { UE_LOG(LogTemp, Warning, TEXT("not null")); }
 	nw->Player = this;
 
 	// Store the weapon at the correct index in the weapon array
-	CurrentWeapons.Insert(nw, 0);
+	CurrentWeapons.Insert(nw, sI);
 
 	// Finally, setup the weapon
 	nw->SetupWeapon(ID, foundWeapon->BaseStats, foundWeapon->BaseVisual);
@@ -172,9 +191,9 @@ void APlayerCharacter::ADS()
 
 void APlayerCharacter::FireCurrentWeapon()
 {
+	if (bFireHeld == false) { bFireHeld = true; }
+	else { bFireHeld = false; }
 	if (bInReload != true) {
-		if (bFireHeld == false) { bFireHeld = true; }
-		else { bFireHeld = false; }
 		CurrentWeapons[CurrentWeaponIndex]->StartFire(bFireHeld);
 	}
 }

@@ -39,6 +39,9 @@ public:
 		virtual void ContinueFire();
 
 	UFUNCTION(BlueprintCallable)
+		virtual void StopFire();
+
+	UFUNCTION(BlueprintCallable)
 		bool GetCanReload();
 
 	UFUNCTION(BlueprintCallable)

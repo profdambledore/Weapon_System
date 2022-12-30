@@ -15,6 +15,7 @@ class WEAPON_SYSTEM_API AFullAutoTrigger : public AWeaponParent
 public:
 	virtual void StartFire(bool bCantFire) override;
 	virtual void ContinueFire() override;
+	virtual void StopFire() override;
 
 	bool bAutoDelay = false;
 

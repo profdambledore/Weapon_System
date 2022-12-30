@@ -25,6 +25,7 @@ void AFullAutoTrigger::StartFire(bool bCantFire)
 	}
 }
 
+
 void AFullAutoTrigger::ContinueFire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Continue Fire"))
@@ -38,4 +39,9 @@ void AFullAutoTrigger::ContinueFire()
 	else {
 		Player->Reload();
 	}
+}
+
+void AFullAutoTrigger::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(AutoTimerHandle);
 }

@@ -125,8 +125,13 @@ void AWeaponParent::ContinueFire() // Only overrided
 {
 }
 
+void AWeaponParent::StopFire()
+{
+}
+
 bool AWeaponParent::GetCanReload()
 {
+	StopFire();
 	if ((ReserveAmmo == -1 || ReserveAmmo >= 1) && CurrentMagazine < Stats.Magazine) { return true; };
 	
 	return false;
