@@ -104,9 +104,39 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCurveFloat* Dropoff;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EndDist;
+};
+
+USTRUCT(BlueprintType)
+struct FStability : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* VisualKick;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* ActualKick;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* InBurstKick;
+};
+
+USTRUCT(BlueprintType)
+struct FHandling : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* Draw;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* Stow;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UCurveFloat* ADS;
+
 };
 
 USTRUCT(BlueprintType)
@@ -134,10 +164,10 @@ public:
 		FRange Range;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCurveFloat* Stability;
+		FStability Stability;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCurveFloat* Handling;
+		FHandling Handling;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCurveFloat* Reload;

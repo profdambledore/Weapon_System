@@ -39,7 +39,7 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 	CurrentMagazine = Stats.Magazine;
 
 	// Update speed stats
-	Player->SetADSSpeed(0.35f);
+	Player->SetADSSpeed(Stats.Frame.Handling.ADS->GetFloatValue(Stats.Handling));
 
 	// Set the visuals of the weapon
 	Body->SetSkeletalMesh(NewVisual.BodyMesh);
