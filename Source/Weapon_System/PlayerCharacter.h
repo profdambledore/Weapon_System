@@ -34,7 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		bool SetNeweapon(FName ID);
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void AimDownSight();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -52,8 +52,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SwapToWeapon(int Index);
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void StowCurrentWeapon();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void StowCurrentWeapon(int Index);
 
 	void Reload();
 
@@ -105,14 +105,14 @@ public:
 		USceneComponent* WeaponBackR;
 
 	// Weapon Data Table
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data Table")
 		UDataTable* WeaponDataTable = nullptr;
 
 	// Weapons
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Data Table")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
 		TArray <AWeaponParent*> CurrentWeapons;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
 		int CurrentWeaponIndex = 0;
 
 	FWeaponStats foundWeaponStat;
@@ -123,8 +123,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		FVector WeaponLoc;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Tests")
 		bool bInReload;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Tests")
+		bool bInStowDraw;
 
 	int NewWeaponIndex;
 

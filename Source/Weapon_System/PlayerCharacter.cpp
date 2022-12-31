@@ -193,7 +193,7 @@ void APlayerCharacter::FireCurrentWeapon()
 {
 	if (bFireHeld == false) { bFireHeld = true; }
 	else { bFireHeld = false; }
-	if (bInReload != true) {
+	if (bInReload != true && bInStowDraw != true) {
 		CurrentWeapons[CurrentWeaponIndex]->StartFire(bFireHeld);
 	}
 }
@@ -203,11 +203,11 @@ void APlayerCharacter::SwapNext()
 {
 	if ((CurrentWeaponIndex + 1) >= 3) {
 		NewWeaponIndex = 0;
-		StowCurrentWeapon();
+		StowCurrentWeapon(NewWeaponIndex);
 	}
 	else {
 		NewWeaponIndex = CurrentWeaponIndex + 1;
-		StowCurrentWeapon();
+		StowCurrentWeapon(NewWeaponIndex);
 	}
 }
 
@@ -215,11 +215,11 @@ void APlayerCharacter::SwapPrev()
 {
 	if ((CurrentWeaponIndex - 1) <= -1) {
 		NewWeaponIndex = 2;
-		StowCurrentWeapon();
+		StowCurrentWeapon(NewWeaponIndex);
 	}
 	else {
 		NewWeaponIndex = CurrentWeaponIndex - 1;
-		StowCurrentWeapon();
+		StowCurrentWeapon(NewWeaponIndex);
 	}
 }
 
@@ -230,6 +230,8 @@ void APlayerCharacter::SwapTo(int Index)
 
 void APlayerCharacter::SwapToWeapon(int Index)
 {
+	CurrentWeaponIndex = Index;
+
 	// Make attach data
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
 
@@ -257,5 +259,4 @@ void APlayerCharacter::SwapToWeapon(int Index)
 	default:
 		break;
 	}
-	CurrentWeaponIndex = Index;
 }
