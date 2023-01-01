@@ -17,6 +17,6 @@ In this project, I research how Bungie utilises a plug-and-socket system, differ
 - Unreal Engine 4.26. 
 - GitHub Desktop. 
 - Vegas Pro.
-- Charm by (add here)
+- [Charm by MontagueM](https://github.com/MontagueM/Charm)
 
 
