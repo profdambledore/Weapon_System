@@ -38,6 +38,10 @@ APlayerCharacter::APlayerCharacter()
 	ConstructorHelpers::FObjectFinder<UDataTable>DTObject(TEXT("/Game/Weapons/Data/Weapon.Weapon"));
 	if (DTObject.Succeeded()) { WeaponDataTable = DTObject.Object; }
 
+	// Do the same for the recoil curve
+	ConstructorHelpers::FObjectFinder<UCurveFloat>RDObject(TEXT("/Game/Weapons/Data/C_RecoilDirection.C_RecoilDirection"));
+	if (RDObject.Succeeded()) { RecoilCurve = RDObject.Object; }
+
 	CurrentWeapons.SetNum(3);
 }
 
@@ -48,7 +52,7 @@ void APlayerCharacter::BeginPlay()
 
 	// Attach weapons to slots
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
-	KineticWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+	KineticWeaponActor->AttachToComponent(GetMesh(), attachRules, "GripPoint");
 	EnergyWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
 	HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
 
@@ -59,7 +63,7 @@ void APlayerCharacter::BeginPlay()
 	WeaponLoc = ActiveWeaponLoc->GetRelativeLocation();
 
 	SetNeweapon(FName("AR_AD_001"));
-	SetNeweapon(FName("SMG_LW_001"));
+	//SetNeweapon(FName("SMG_LW_001"));
 }
 
 // Called every frame
@@ -239,7 +243,7 @@ void APlayerCharacter::SwapToWeapon(int Index)
 	bool bfirstslot = false;
 	switch (Index) {
 	case 0: // Kinetic to set held
-		KineticWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		KineticWeaponActor->AttachToComponent(GetMesh(), attachRules, "GripPoint");
 		EnergyWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
 		HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
 		break;

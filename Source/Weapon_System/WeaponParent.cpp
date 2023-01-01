@@ -4,6 +4,7 @@
 
 #include "DamageableInterface.h"
 #include "DamageNumberController.h"
+#include "Animation/AnimBlueprint.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -14,8 +15,6 @@ AWeaponParent::AWeaponParent()
 
 	// Create Default Sub-Objects
 	Body = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
-	Magazine = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Magazine"));
-	Magazine->SetupAttachment(Body, FName("MagazineSocket"));
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +35,7 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 {
 	// Set the stats and magazine
 	Stats = NewStats;
+	Visual = NewVisual;
 	CurrentMagazine = Stats.Magazine;
 
 	// Update speed stats
@@ -43,10 +43,9 @@ bool AWeaponParent::SetupWeapon(FName NewID, FWeaponStats NewStats, FWeaponVisua
 
 	// Set the visuals of the weapon
 	Body->SetSkeletalMesh(NewVisual.BodyMesh);
-	Magazine->SetSkeletalMesh(NewVisual.MagazineMesh);
 
-	// Set the magazine to the Body's magazine location
-	//Magazine->SetRelativeLocation(Body->GetSocketLocation(FName("MagazineSocket")));
+	// Set the anim blueprint for the weapon mesh
+	Body->SetAnimInstanceClass(Visual.AnimBP->GeneratedClass);
 
 	return true;
 }
@@ -85,6 +84,9 @@ bool AWeaponParent::FireBullet()
 		ECC_GameTraceChannel1,
 		traceParams
 	);
+
+	Body->GetAnimInstance()->Montage_Play(Visual.FireAnim, 1.0f);
+	Recoil();
 
 	if (GEngine) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
@@ -127,6 +129,19 @@ void AWeaponParent::ContinueFire() // Only overrided
 
 void AWeaponParent::StopFire()
 {
+}
+
+void AWeaponParent::Recoil()
+{
+	// Get the float value from the recoil curve and calculate the angle from the curve
+	float recoilAngleFromCurve =  MaxRecoilAngle * (Player->RecoilCurve->GetFloatValue(Stats.Recoil));
+	
+	// Calculate a random recoil angle from stability
+	float sHD = Stats.Frame.Stability.HorizontalKick->GetFloatValue(Stats.Stability);
+	float calcRecoilAngle = FMath::RandRange(recoilAngleFromCurve - sHD, recoilAngleFromCurve + sHD);
+
+	// Do Visual and Actual Recoil
+	Player->VisualRecoil(calcRecoilAngle, Stats.Frame.Stability.VerticalKick->GetFloatValue(Stats.Stability));
 }
 
 bool AWeaponParent::GetCanReload()

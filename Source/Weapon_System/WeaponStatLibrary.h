@@ -7,6 +7,8 @@
 
 #include "Engine/DataTable.h"
 #include "Curves/CurveFloat.h"
+#include "Animation/AnimBlueprint.h"
+#include "Animation/AnimMontage.h"
 
 #include "WeaponStatLibrary.generated.h"
 
@@ -114,10 +116,10 @@ struct FStability : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCurveFloat* VisualKick;
+		UCurveFloat* VerticalKick;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCurveFloat* ActualKick;
+		UCurveFloat* HorizontalKick;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCurveFloat* InBurstKick;
@@ -264,7 +266,13 @@ public:
 		USkeletalMesh* BodyMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USkeletalMesh* MagazineMesh;
+		UAnimBlueprint* AnimBP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UAnimMontage* FireAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UAnimMontage* ReloadAnim;
 };
 
 USTRUCT(BlueprintType)

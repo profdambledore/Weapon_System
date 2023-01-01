@@ -42,6 +42,9 @@ public:
 		virtual void StopFire();
 
 	UFUNCTION(BlueprintCallable)
+		void Recoil();
+
+	UFUNCTION(BlueprintCallable)
 		bool GetCanReload();
 
 	UFUNCTION(BlueprintCallable)
@@ -65,9 +68,6 @@ public:
 		USkeletalMeshComponent* Body;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USkeletalMeshComponent* Magazine;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USceneComponent* Barrel;
 
 	// Properties
@@ -77,6 +77,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
 		FWeaponStats Stats;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
+		FWeaponVisual Visual;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Data")
 		int CurrentMagazine;
@@ -90,4 +93,7 @@ public:
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Data")
 		class APlayerCharacter* Player = nullptr;
+
+	// Global Weapon Data
+	float MaxRecoilAngle = 1.5f;
 };

@@ -44,7 +44,7 @@ public:
 		void CancelReload();
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void VisualRecoil();
+		void VisualRecoil(float Angle, float Severity);
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void SetADSSpeed(float NewSpeed);
@@ -122,6 +122,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 		FVector WeaponLoc;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons")
+		UCurveFloat* RecoilCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Tests")
 		bool bInReload;
