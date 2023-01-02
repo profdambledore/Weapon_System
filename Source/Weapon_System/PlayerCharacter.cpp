@@ -63,7 +63,8 @@ void APlayerCharacter::BeginPlay()
 	WeaponLoc = ActiveWeaponLoc->GetRelativeLocation();
 
 	SetNeweapon(FName("AR_AD_001"));
-	//SetNeweapon(FName("SMG_LW_001"));
+	SetNeweapon(FName("SMG_LW_001"));
+	SetNeweapon(FName("SR_AD_001"));
 }
 
 // Called every frame
@@ -249,13 +250,13 @@ void APlayerCharacter::SwapToWeapon(int Index)
 		break;
 
 	case 1: // Energy to set held
-		EnergyWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		EnergyWeaponActor->AttachToComponent(GetMesh(), attachRules, "GripPoint");
 		KineticWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
 		HeavyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
 		break;
 
 	case 2: // Heavy to set held
-		HeavyWeaponActor->AttachToComponent(ActiveWeaponLoc, attachRules, "");
+		HeavyWeaponActor->AttachToComponent(GetMesh(), attachRules, "GripPoint");
 		KineticWeaponActor->AttachToComponent(WeaponBackL, attachRules, "");
 		EnergyWeaponActor->AttachToComponent(WeaponBackR, attachRules, "");
 		break;

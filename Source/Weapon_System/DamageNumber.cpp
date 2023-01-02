@@ -79,7 +79,7 @@ bool ADamageNumber::NewDamageNumber(FVector Loc, bool bNewCrit, int NewDamage)
 
 	// Choose a random diretction to move in
 	DistX = FMath::FRandRange((Distance * -1), Distance);
-	DistY = FMath::FRandRange((Distance * -1), Distance);	
+	DistY = FMath::FRandRange((Distance * -1), Distance);
 
 	TravelLine->PlayFromStart();
 
