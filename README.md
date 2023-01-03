@@ -4,6 +4,12 @@ A Destiny 2 inspired Weapon and Perk system created in Unreal Engine 4
 
 ## Project Support Document:
 
+[Link](https://github.com/profdambledore/Weapon_System/blob/main/Destiny_Style_Weapon_and_Perk_System.pdf)
+
+## Concept
+
+Re-create the weapon systems from Destiny 2 into Unreal Engine 4/5, including the stat and frame system, perk/plug system, three different weapon buckets, damage multipliers and interaction between weapons and the player.  Also recreate some of the traits available in the game - such as Rapid Hit and Rangefinder
+
 ## Why?
 
 As an avide player of the Destiny series for the last 6+ years, Destiny 2 has one of the best weapon systems of any modern game, not just in the looter shooter.  While allowing for player creativity and build crafting, the limitations of the system keep the game in balance while having over the 100~ different weapons available.
