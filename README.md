@@ -20,9 +20,11 @@ In this project, I research how Bungie utilises a plug-and-socket system, differ
 - Polygon Apocalypse by SyntyStudios 
 
 ## Programs Used:
-- Unreal Engine 4.26. 
-- GitHub Desktop. 
-- Vegas Pro.
-- [Charm by MontagueM](https://github.com/MontagueM/Charm)
+- Unreal Engine 4.26 - Game Engine.
+- Visual Studio 2019 - Code Editing.
+- Overleaf with LaTeX - Document Creation
+- GitHub Desktop - Git Control. 
+- Vegas Pro - Reload Animation Analysis.
+- [Charm by MontagueM](https://github.com/MontagueM/Charm) - Weapon Models
 
 
